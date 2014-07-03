@@ -36,8 +36,8 @@
 			response = JSON.parse(xhr.responseText);
 			response.forEach(function (scene) {
 				var options = {
-					start: scene.start,
-					end: scene.end
+					start: Popcorn.util.toSeconds(scene.start, FRAME_RATE),
+					end: scene.end && Popcorn.util.toSeconds(scene.end, FRAME_RATE)
 				};
 				['x', 'y', 'width', 'height'].forEach(function (field) {
 					var val = scene[field],
@@ -46,9 +46,9 @@
 					if (typeof val === 'object') {
 						keyframes = {};
 						Popcorn.forEach(val, function (val, time) {
-							if (isNaN(parseInt(time, 10))) {
+							if (/[;:]/.test(time)) {
 								time = Popcorn.util.toSeconds(time, FRAME_RATE);
-								time = (time - scene.start) / (scene.end - scene.start);
+								time = (time - options.start) / (options.end - options.start);
 							}
 							keyframes[time] = val;
 						});
@@ -265,108 +265,10 @@
 		video.addEventListener('loadedmetadata', fetch);
 	}
 
-	/*
-	Cutie and the Boxer clip data
-	*/
 	popcorn = Popcorn('#video', {
 		frameAnimation: true,
 		framerate: FRAME_RATE
 	});
-
-	/*
-	//skyline
-	popcorn.responsive({
-		start: 0,
-		end: '3;21',
-		x: 1280,
-		y: 200
-	});
-
-	//bridge
-	popcorn.responsive({
-		start: '3;21',
-		end: '7;07',
-		x: 270,
-		y: 620
-	});
-
-	//back rub
-	popcorn.responsive({
-		start: '7;07',
-		end: '15;09',
-		x: 850,
-		y: 200
-	});
-
-	//putting gloves on
-	popcorn.responsive({
-		start: '15;09',
-		end: '22;15',
-		x: 779,
-		y: 341
-	});
-
-	//cutie in studio with weird sculpture thingy
-	popcorn.responsive({
-		start: '22;15',
-		end: '27;08',
-		x: 983,
-		y: 338
-	});
-
-	//punching and painting
-	var start = Popcorn.util.toSeconds('27;08', FRAME_RATE),
-		end = Popcorn.util.toSeconds('3:07;08', FRAME_RATE),
-		xKeyframes = {
-			from: 1280,
-			timing: 'ease'
-		},
-		yKeyframes = {
-			from: 391
-		};
-
-	function timeToFraction(t) {
-		var time = Popcorn.util.toSeconds(t, FRAME_RATE);
-
-		return (time - start) / (end - start);
-	}
-
-	xKeyframes[timeToFraction('32;11')] = 1280;
-	xKeyframes[timeToFraction('33;23')] = 1200;
-	xKeyframes[timeToFraction('40;19')] = 1200;
-	xKeyframes[timeToFraction('43;17')] = 1100;
-	xKeyframes[timeToFraction('47;09')] = 1100;
-	xKeyframes[timeToFraction('49;21')] = 1280;
-	xKeyframes[timeToFraction('53;00')] = 1280;
-	xKeyframes[timeToFraction('55;00')] = 1100;
-
-	//xKeyframes[timeToFraction('54;01')] = 1280;
-
-	//xKeyframes[timeToFraction('56;19')] = 1280;
-
-	popcorn.responsive({
-		start: start,
-		end: end,
-		x: xKeyframes,
-		y: yKeyframes
-	});
-
-	//title
-	popcorn.responsive({
-		start: '3:07;08',
-		end: '3:12;12',
-		x: 641,
-		y: 353
-	});
-
-	//ceiling fan
-	popcorn.responsive({
-		start: '3:12;12',
-		//end: '3:12;12',
-		x: 975,
-		y: 337
-	});
-	*/
 
 	enabled.addEventListener('change', function () {
 		if (enabled.checked) {
