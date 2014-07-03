@@ -76,18 +76,41 @@
 			parent = parent.offsetParent;
 		}
 
+		x = clientX - x;
+		y = clientY - y;
+
 		return {
-			x: clientX - x,
-			y: clientY - y
+			x: x,
+			y:  y
 		};
+	}
+
+	function elementMatrix(element) {
+		var st = window.getComputedStyle(element, null),
+			tr = st.getPropertyValue("transform") ||
+				st.getPropertyValue("-webkit-transform") ||
+				st.getPropertyValue("-moz-transform") ||
+				st.getPropertyValue("-ms-transform") ||
+				st.getPropertyValue("-o-transform");
+
+		if (tr && tr !== 'none') {
+			return tr.substr(7, tr.length - 8).split(', ').map(parseFloat);
+		}
+
+		return [1, 0, 0, 1, 0, 0];
 	}
 
 	function displayCoords(e) {
 		var coords = calcCoords(e.clientX, e.clientY),
-			scaleFactor = Math.max(window.innerWidth / video.videoWidth, window.innerHeight / video.videoHeight);
+			m = elementMatrix(video),
+			x, y;
 
-		position.innerHTML = Math.round(coords.x / scaleFactor) + ', ' +
-			Math.round(coords.y / scaleFactor);
+		//undo the CSS transform. This won't work if there's a skew or rotation
+		x = (coords.x - m[4]) / m[0];
+		y = (coords.y - m[5]) / m[3];
+
+		position.innerHTML = Math.round(x) + ', ' +
+			Math.round(y);
 	}
 
 	// for debugging/authoring
@@ -124,7 +147,14 @@
 
 	function updateBox() {
 		var topLeft,
-			scaleFactor;
+			m = elementMatrix(video),
+			top,
+			left,
+			width,
+			height,
+			bottom,
+			right;
+
 
 		if (boxWidth >= 0) {
 			box.style.left = boxX + 'px';
@@ -143,14 +173,20 @@
 		}
 
 		topLeft = calcCoords(Math.min(boxX, boxX + boxWidth), Math.min(boxY, boxY + boxHeight));
-		scaleFactor = Math.max(window.innerWidth / video.videoWidth, window.innerHeight / video.videoHeight);
+
+		//undo the CSS transform. This won't work if there's a skew or rotation
+		left = (topLeft.x - m[4]) / m[0];
+		top = (topLeft.y - m[5]) / m[3];
+
+		right = topLeft.x + Math.abs(boxWidth);
+		bottom = topLeft.y + Math.abs(boxHeight);
+
+		width = (right - m[4]) / m[0] - left;
+		height = (bottom - m[5]) / m[3] - top;
 
 		boxdata.innerHTML = [
-			topLeft.x,
-			Math.round(Math.abs(boxWidth) / scaleFactor),
-			topLeft.y,
-			Math.round(Math.abs(boxHeight) / scaleFactor)
-		].join(', ');
+			left, width, top, height
+		].map(Math.round).join(', ');
 	}
 
 	video.addEventListener('mousedown', function (evt) {
