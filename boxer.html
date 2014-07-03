@@ -17,6 +17,10 @@
 			position: absolute;
 			top: 0;
 			left: 0;
+			-webkit-transform-origin: top left;
+			-ms-transform-origin: top left;
+			-moz-transform-origin: top left;
+			transform-origin: top left;
 		}
 
 		#video-player {
@@ -68,6 +72,14 @@
 			padding: 8px;
 		}
 
+		#box {
+			background-color: rgba(255, 255, 255, 0.2);
+			border: 2px solid background-color: rgba(255, 255, 255, 0.8);
+			box-sizing: border-box;
+			position: absolute;
+			display: none;
+		}
+
 		</style>
 	</head>
 	<body>
@@ -85,7 +97,9 @@
 			<input type="checkbox" id="enabled" checked/> <label for="enabled">Effect enabled</label>
 			<div id="timecode">0:00:00;00</div>
 			<div id="position"></div>
+			<div id="boxdata"></div>
 		</div>
+		<div id="box"></div>
 		<script type="text/javascript" src="js/lib/popcorn.js"></script>
 		<script type="text/javascript" src="js/lib/popcorn-base.js"></script>
 		<script type="text/javascript" src="js/popcorn.responsive.js"></script>

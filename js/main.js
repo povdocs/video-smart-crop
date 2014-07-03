@@ -1,117 +1,89 @@
 (function (window) {
-	var container = document.body,
-		video = document.getElementById('video'),
+	'use strict';
+	var video = document.getElementById('video'),
 		enabled = document.getElementById('enabled'),
 		timecode = document.getElementById('timecode'),
 		position = document.getElementById('position'),
+		box = document.getElementById('box'),
+		boxdata = document.getElementById('boxdata'),
 
 		FRAME_RATE = 23.976216,
 
-		centerX,
-		centerY,
-		x,
-		y,
-		currentTime = 0,
+		currentTime,
 
-		lastResize = 0,
-		windowWidth = 0,
-		windowHeight = 0,
-		resizeTimeout,
+		popcorn,
+		player,
 
-		frames = [];
+		dragging = false,
+		boxX = 0,
+		boxY = 0,
+		boxWidth = 0,
+		boxHeight = 0;
 
-	function resize(force) {
-		function resizePlayer() {
-			var windowAspect,
-				videoAspect;
-			return;
-			if (windowHeight === window.innerHeight &&
-					windowWidth === window.innerWidth &&
-					centerX === x &&
-					centerY === y) {
+	function fetch() {
+		var xhr = new XMLHttpRequest();
+		xhr.onload = function () {
+			var response,
+				base;
 
-				return;
-			}
+			base = {
+				x: 0,
+				y: 0,
+				width: video.videoWidth,
+				height: video.videoHeight
+			};
 
-			windowHeight = window.innerHeight;
-			windowWidth = window.innerWidth;
+			response = JSON.parse(xhr.responseText);
+			response.forEach(function (scene) {
+				var options = {
+					start: scene.start,
+					end: scene.end
+				};
+				['x', 'y', 'width', 'height'].forEach(function (field) {
+					var val = scene[field],
+						keyframes;
 
-			videoAspect = video.videoWidth / video.videoHeight;
-			windowAspect = windowWidth / windowHeight;
-
-			y = centerY;
-			x = centerX;
-
-			if (windowAspect > videoAspect) {
-				//window is not tall enough
-				video.style.width = '100%';
-				video.style.height = '';
-				video.style.left = '0';
-
-				if (enabled.checked) {
-					video.style.top = -centerY * (1 - videoAspect / windowAspect) + 'px';
-				} else {
-					video.style.top = -windowHeight / 2 * (1 - videoAspect / windowAspect) + 'px';
-				}
-			} else {
-				//window is not wide enough
-				video.style.width = '';
-				video.style.height = '100%';
-				video.style.top = '0';
-
-				if (enabled.checked) {
-					video.style.left = -centerX * (1 - windowAspect / videoAspect) + 'px';
-				} else {
-					video.style.left = -windowWidth / 2 * (1 - windowAspect / videoAspect) + 'px';
-				}
-			}
-		}
-
-		force = force === true;
-
-		if (!force || Date.now() - lastResize < 250) {
-			clearTimeout(resizeTimeout);
-			resizeTimeout = setTimeout(resizeTimeout, 250);
-		} else {
-			resizePlayer();
-		}
+					if (typeof val === 'object') {
+						keyframes = {};
+						Popcorn.forEach(val, function (val, time) {
+							if (isNaN(parseInt(time, 10))) {
+								time = Popcorn.util.toSeconds(time, FRAME_RATE);
+								time = (time - scene.start) / (scene.end - scene.start);
+							}
+							keyframes[time] = val;
+						});
+						options[field] = keyframes;
+					} else {
+						options[field] = val;
+					}
+				});
+				popcorn.responsive(options);
+			});
+		};
+		xhr.open('GET', 'data/boxer.json');
+		xhr.send();
 	}
 
-	function update() {
-		var frame = Math.floor(video.currentTime * FRAME_RATE),
-			pos = frames[frame];
 
-		if (pos) {
-			centerX = pos.x;
-			centerY = pos.y;
-		} else {
-			centerX = video.videoWidth / 2;
-			centerY = video.videoHeight / 2;
+	function calcCoords(clientX, clientY) {
+		var parent = video,
+			x = 0,
+			y = 0;
+
+		while (parent && parent !== document.body) {
+			x += parent.offsetLeft;
+			y += parent.offsetTop;
+			parent = parent.offsetParent;
 		}
 
-		resize(true);
-		requestAnimationFrame(update);
+		return {
+			x: clientX - x,
+			y: clientY - y
+		};
 	}
 
 	function displayCoords(e) {
-		function calcCoords(evt) {
-			var parent = video,
-				x = 0,
-				y = 0;
-
-			while (parent && parent !== document.body) {
-				x += parent.offsetLeft;
-				y += parent.offsetTop;
-				parent = parent.offsetParent;
-			}
-
-			return {
-				x: evt.clientX - x,
-				y: evt.clientY - y
-			};
-		}
-
-		var coords = calcCoords(e),
+		var coords = calcCoords(e.clientX, e.clientY),
 			scaleFactor = Math.max(window.innerWidth / video.videoWidth, window.innerHeight / video.videoHeight);
 
 		position.innerHTML = Math.round(coords.x / scaleFactor) + ', ' +
@@ -127,7 +99,6 @@
 			t;
 
 		function twoDigits(n) {
-			var s;
 			if (n < 10) {
 				return '0' + n.toString();
 			}
@@ -151,9 +122,72 @@
 		requestAnimationFrame(displayTime);
 	}
 
-	//video.addEventListener('loadedmetadata', fetch, false);
-	//window.addEventListener('resize', resize, false);
-	//window.addEventListener('orientationchange', resize, false);
+	function updateBox() {
+		var topLeft,
+			scaleFactor;
+
+		if (boxWidth >= 0) {
+			box.style.left = boxX + 'px';
+			box.style.width = boxWidth + 'px';
+		} else {
+			box.style.left = boxX + boxWidth + 'px';
+			box.style.width = -boxWidth + 'px';
+		}
+
+		if (boxHeight >= 0) {
+			box.style.top = boxY + 'px';
+			box.style.height = boxHeight + 'px';
+		} else {
+			box.style.top = boxY + boxHeight + 'px';
+			box.style.height = -boxHeight + 'px';
+		}
+
+		topLeft = calcCoords(Math.min(boxX, boxX + boxWidth), Math.min(boxY, boxY + boxHeight));
+		scaleFactor = Math.max(window.innerWidth / video.videoWidth, window.innerHeight / video.videoHeight);
+
+		boxdata.innerHTML = [
+			topLeft.x,
+			Math.round(Math.abs(boxWidth) / scaleFactor),
+			topLeft.y,
+			Math.round(Math.abs(boxHeight) / scaleFactor)
+		].join(', ');
+	}
+
+	video.addEventListener('mousedown', function (evt) {
+		if (evt.which === 1) {
+			dragging = true;
+			boxX = evt.clientX;
+			boxY = evt.clientY;
+			boxWidth = 0;
+			boxHeight = 0;
+			box.style.display = 'block';
+			updateBox();
+			evt.preventDefault();
+		}
+	}, true);
+
+	window.addEventListener('mousemove', function (evt) {
+		if (dragging) {
+			boxWidth = evt.clientX - boxX;
+			boxHeight = evt.clientY - boxY;
+			updateBox();
+			evt.preventDefault();
+		}
+	}, true);
+
+	window.addEventListener('mouseup', function () {
+		dragging = false;
+		if (!boxWidth || !boxHeight) {
+			box.style.display = '';
+		}
+	}, true);
+
+	box.addEventListener('click', function () {
+		dragging = false;
+		boxWidth = 0;
+		boxHeight = 0;
+		box.style.display = '';
+	}, false);
 
 	window.addEventListener('keyup', function(evt) {
 		if (evt.which === 32) {
@@ -177,24 +211,33 @@
 
 	window.addEventListener('mousemove', displayCoords, false);
 
+	/*
 	if (/iP(ad|hone|od)/g.test(navigator.userAgent)) {
 		setInterval(resize, 500);
 	}
+	*/
 
-	var player = new Play({
+	player = new Play({
 		media: video,
 		playButton: 'playbutton',
 		timeline: 'timeline'
 	});
 
+	if (video.readyState) {
+		fetch();
+	} else {
+		video.addEventListener('loadedmetadata', fetch);
+	}
+
 	/*
 	Cutie and the Boxer clip data
 	*/
-	var popcorn = Popcorn('#video', {
+	popcorn = Popcorn('#video', {
 		frameAnimation: true,
 		framerate: FRAME_RATE
 	});
 
+	/*
 	//skyline
 	popcorn.responsive({
 		start: 0,
@@ -287,6 +330,8 @@
 		x: 975,
 		y: 337
 	});
+	*/
+
 	enabled.addEventListener('change', function () {
 		if (enabled.checked) {
 			popcorn.enable('responsive');

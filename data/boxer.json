@@ -1,0 +1,79 @@
+[
+	{
+		"title": "skyline",
+		"start": 0,
+		"end": "3;21",
+		"x": 900,
+		"width": 380,
+		"y": 105,
+		"height": 300
+	},
+	{
+		"title": "bridge",
+		"start": "3;21",
+		"end": "7;07",
+		"x": 235,
+		"width": 370,
+		"y": 415,
+		"height": 275
+	},
+	{
+		"title": "back rub",
+		"start": "7;07",
+		"end": "15;09",
+		"x": 515,
+		"width": 565,
+		"y": 60,
+		"height": 366
+	},
+	{
+		"title": "put gloves on",
+		"start": "15;09",
+		"end": "22;15",
+		"x": 585,
+		"width": 331,
+		"y": 239,
+		"height": 206
+	},
+	{
+		"title": "cutie in studio",
+		"start": "22;15",
+		"end": "27;08",
+		"x": 700,
+		"width": 470,
+		"y": 250,
+		"height": 310
+	},
+
+	{
+		"title": "punching and painting",
+		"start": "27;08",
+		"end": "3:07;08",
+		"x": {
+			"0": 1280
+		},
+		"width": {
+
+		},
+		"y": 208,
+		"height": 312
+	},
+
+	{
+		"title": "title",
+		"start": "3:07;08",
+		"end": "3:12;12",
+		"x": 120,
+		"width": 750,
+		"y": 76,
+		"height": 583
+	},
+	{
+		"title": "ceiling fan",
+		"start": "3:12;12",
+		"x": 749,
+		"width": 602,
+		"y": 248,
+		"height": 240
+	}
+]

@@ -7,25 +7,24 @@
 		lastResize = 0,
 
 		windowWidth = 0,
-		windowHeight = 0;
+		windowHeight = 0,
+
+		RESIZE_THROTTLE = 30;
 
 	function resize(popcorn) {
 		var instance = instances[popcorn.id],
 			list,
-			i,
 			videoAspect,
 			windowAspect,
 			options,
-			video;
+			video,
 
-		function adjustedCoord(pos, scaleFactor, videoDim, windowDim) {
-			var fraction = pos / videoDim,
-				scaledVideoDim = videoDim * scaleFactor,
-				original = fraction * scaledVideoDim,
-				adjusted = windowDim * fraction;
-
-			return adjusted - original;
-		}
+			scale,
+			min,
+			clipDim,
+			videoWidth,
+			videoHeight,
+			transform = '';
 
 		if (!instance) {
 			return;
@@ -37,46 +36,57 @@
 		options = list[0];
 		video = popcorn.media;
 		if (options) {
-			videoAspect = video.videoWidth / video.videoHeight;
+			videoWidth = video.videoWidth;
+			videoHeight = video.videoHeight;
+			videoAspect = videoWidth / videoHeight;
 			windowAspect = windowWidth / windowHeight;
 
 			if (windowAspect > videoAspect) {
 				//window is not tall enough
-				instance.targetX = 0;
-				instance.targetY = adjustedCoord(options.y, windowWidth / video.videoWidth, video.videoHeight, windowHeight);
-				//instance.targetY = -options.y * (1 - videoAspect / windowAspect);
-				video.style.width = '100%';
-				video.style.height = windowWidth / videoAspect + 'px';
+				scale = windowWidth / videoWidth;
+				min = options.y;
+
+				clipDim = videoWidth / windowAspect;
+				if (clipDim < options.height) {
+					//window is REALLY not tall enough, so we need to pillarbox
+					scale = windowHeight / options.height;
+					transform = 'scale(' + scale + ') translate(' +
+						(windowWidth - videoWidth * scale) / 2 + 'px, ' +
+						-min +
+						'px)';
+				} else {
+					transform = 'scale(' + scale + ') translateY(' +
+						-((videoHeight - clipDim) * min / (videoHeight - options.height)) +
+						'px)';
+				}
 			} else {
-				instance.targetX = adjustedCoord(options.x, windowHeight / video.videoHeight, video.videoWidth, windowWidth);
-				//instance.targetX = -options.x * (1 - windowAspect / videoAspect);
-				instance.targetY = 0;
-				video.style.width = windowHeight * videoAspect + 'px';
-				video.style.height = '100%';
-			}
+				//window is not wide enough
+				scale = windowHeight / videoHeight;
+				min = options.x;
 
-			if (instance.targetX !== instance.x) {
-				instance.x = instance.targetX;
-				video.style.left = instance.x + 'px'
+				clipDim = videoHeight * windowAspect;
+				if (clipDim < options.width) {
+					//window is REALLY not wide enough, so we need to letterbox
+					scale = windowWidth / options.width;
+					transform = 'scale(' + scale + ') translate(' +
+						-min + 'px,' +
+						(windowHeight - videoHeight * scale) / 2 +
+						'px)';
+				} else {
+					transform = 'scale(' + scale + ') translateX(' +
+						-((videoWidth - clipDim) * min / (videoWidth - options.width)) +
+						'px)';
+				}
 			}
-
-			if (instance.targetY !== instance.y) {
-				instance.y = instance.targetY;
-				video.style.top = instance.y + 'px'
-			}
-		} else {
-			/*
-			instance.x = -1;
-			instance.y = -1;
-			video.style.width = '';
-			video.style.height = '';
-			video.style.top = '';
-			video.style.left = '';
-			*/
 		}
+		video.style.webkitTransform = transform;
+		video.style.msTransform = transform;
+		video.style.mozTransform = transform;
+		video.style.transform = transform;
 	}
 
 	function resizeAll() {
+		lastResize = Date.now();
 		if (windowHeight === window.innerHeight &&
 				windowWidth === window.innerWidth) {
 
@@ -90,9 +100,9 @@
 	}
 
 	function resizeWindow() {
-		if (!force || Date.now() - lastResize < 250) {
+		if (Date.now() - lastResize < RESIZE_THROTTLE) {
 			clearTimeout(resizeTimeout);
-			resizeTimeout = setTimeout(resizeTimeout, 250);
+			resizeTimeout = setTimeout(resizeTimeout, RESIZE_THROTTLE);
 		} else {
 			resizeAll();
 		}
@@ -104,7 +114,7 @@
 		}
 
 		if (a.maxAspect !== b.maxAspect) {
-			return b.minAspect - a.minAspect;
+			return b.maxAspect - a.maxAspect;
 		}		
 	}
 
@@ -114,9 +124,7 @@
 			instance = instances[popcorn.id] = {
 				events: [],
 				x: -1,
-				y: -1,
-				targetX: 0,
-				targetY: 0
+				y: -1
 			};
 			popcorn.on('loadedmetadata', function () {
 				resize(popcorn);
@@ -149,29 +157,37 @@
 	todo: only attach these if there is at least one event,
 	detach when the last event is destroyed
 	*/
-	window.addEventListener('resize', resizeAll, false);
+	window.addEventListener('resize', resizeWindow, false);
 	window.addEventListener('orientationchange', resizeAll, false);
 	resizeAll();
 
 	Popcorn.basePlugin('responsive', function (options, base) {
-		var popcorn = base.popcorn,
-			instance;
+		var popcorn = base.popcorn;
 
-		base.animate('x', function (val) {
+		base.animate('x', function () {
 			resize(popcorn);
 		});
 
-		base.animate('y', function (val) {
+		base.animate('y', function () {
+			resize(popcorn);
+		});
+
+		base.animate('width', function () {
+			resize(popcorn);
+		});
+
+		base.animate('height', function () {
+			resize(popcorn);
 		});
 
 		return {
 			start: function() {
-				instance = addEvent(popcorn, base.options);
+				addEvent(popcorn, base.options);
 			},
 			frame: function () {
 				/*
 				only update if this is the highest-priority active instance
-				that matches 
+				that matches
 				*/
 			},
 			end: function() {
