@@ -1,4 +1,6 @@
 (function () {
+	'use strict';
+
 	function touch(element, down, move, up) {
 		function calcCoords(evt, clientX, clientY) {
 			var parent = element,

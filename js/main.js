@@ -7,6 +7,7 @@
 		box = document.getElementById('box'),
 		boxdata = document.getElementById('boxdata'),
 
+		// Customize this value for your specific video file
 		FRAME_RATE = 23.976216,
 
 		currentTime,
@@ -20,18 +21,11 @@
 		boxWidth = 0,
 		boxHeight = 0;
 
+	// Load scene data from JSON file on the server
 	function fetch() {
 		var xhr = new XMLHttpRequest();
 		xhr.onload = function () {
-			var response,
-				base;
-
-			base = {
-				x: 0,
-				y: 0,
-				width: video.videoWidth,
-				height: video.videoHeight
-			};
+			var response;
 
 			response = JSON.parse(xhr.responseText);
 			response.forEach(function (scene) {
@@ -64,7 +58,7 @@
 		xhr.send();
 	}
 
-
+	// Calculate coordinates of a mouse event relative to an element
 	function calcCoords(clientX, clientY) {
 		var parent = video,
 			x = 0,
@@ -85,6 +79,7 @@
 		};
 	}
 
+	// Get transformation matrix for an element that may use CSS transforms
 	function elementMatrix(element) {
 		var st = window.getComputedStyle(element, null),
 			tr = st.getPropertyValue("transform") ||
@@ -100,6 +95,7 @@
 		return [1, 0, 0, 1, 0, 0];
 	}
 
+	// Display mouse coordinates relative to video
 	function displayCoords(e) {
 		var coords = calcCoords(e.clientX, e.clientY),
 			m = elementMatrix(video),
@@ -113,7 +109,7 @@
 			Math.round(y);
 	}
 
-	// for debugging/authoring
+	// Display current timecode for debugging/authoring
 	function displayTime() {
 		var h,
 			m,
@@ -145,6 +141,8 @@
 		requestAnimationFrame(displayTime);
 	}
 
+	// Display coordinates relative to video pixels of a rectangle drawn with mouse
+	// For authoring
 	function updateBox() {
 		var topLeft,
 			m = elementMatrix(video),
@@ -270,6 +268,7 @@
 		framerate: FRAME_RATE
 	});
 
+	// responsive video effect can be turned on/off
 	enabled.addEventListener('change', function () {
 		if (enabled.checked) {
 			popcorn.enable('responsive');
