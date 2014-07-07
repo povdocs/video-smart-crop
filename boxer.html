@@ -34,6 +34,20 @@
 			bottom: 0;
 			overflow: hidden;
 			white-space: nowrap;
+
+			-ms-transition: opacity 0s, visibility 0s linear 0s;
+			-moz-transition: opacity 0s, visibility 0s linear 0s;
+			-webkit-transition: opacity 0s, visibility 0s linear 0s;
+			transition: opacity 0s, visibility 0s linear 0s;
+		}
+
+		#video-player.hidden {
+			opacity: 0;
+			visibility: hidden;
+			-ms-transition: opacity 1s, visibility 0s linear 1s;
+			-moz-transition: opacity 1s, visibility 0s linear 1s;
+			-webkit-transition: opacity 1s, visibility 0s linear 1s;
+			transition: opacity 1s, visibility 0s linear 1s;
 		}
 
 		#timeline {
@@ -42,7 +56,7 @@
 			width: calc(100% - 40px);
 			padding: 8px 0;
 			box-sizing: border-box;
-			/* position: relative; */
+			cursor: pointer;
 		}
 
 		#playbutton {

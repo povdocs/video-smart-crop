@@ -54,11 +54,11 @@
 		element.addEventListener('mousedown', mouseDown, false);
 		
 		element.addEventListener('touchstart', function (e) {
-			var coords;
+			var downCoords;
 
 			function touchMove(e) {
-				var coords = calcCoords(e, e.touches[0].clientX, e.touches[0].clientY);
-				move(e.touches[0] || window.event, coords.x, coords.y);
+				var moveCoords = calcCoords(e, e.touches[0].clientX, e.touches[0].clientY);
+				move(e.touches[0] || window.event, moveCoords.x, moveCoords.y);
 
 				if (e.preventDefault) {
 					e.preventDefault();
@@ -66,8 +66,7 @@
 				return false;
 			}
 
-			function touchEnd(e) {
-				//up(e.touches[0]);
+			function touchEnd() {
 				if (up) {
 					up();
 				}
@@ -81,8 +80,8 @@
 			element.removeEventListener('mousedown',mouseDown, false);
 		
 			if (down) {
-				coords = calcCoords(e, e.touches[0].clientX, e.touches[0].clientY);
-				down(e.touches[0] || window.event, coords.x, coords.y);
+				downCoords = calcCoords(e, e.touches[0].clientX, e.touches[0].clientY);
+				down(e.touches[0] || window.event, downCoords.x, downCoords.y);
 			}
 		
 			if (move) {
@@ -124,8 +123,25 @@
 			timeline,
 			progress,
 			playButton,
+			container,
+
+			hideTimeout,
 
 			seeking = false;
+
+		function hide() {
+			if (container) {
+				container.classList.add('hidden');
+			}
+		}
+
+		function show() {
+			if (container) {
+				container.classList.remove('hidden');
+			}
+			clearTimeout(hideTimeout);
+			hideTimeout = setTimeout(hide, 2000);
+		}
 
 		function updatePlayState() {
 			if (playButton && !seeking) {
@@ -135,6 +151,7 @@
 					playButton.classList.add('playing');
 				}
 			}
+			show();
 		}
 
 		function updateProgress() {
@@ -202,6 +219,13 @@
 			if (progress) {
 				media.addEventListener('timeupdate', updateProgress, false);
 			}
+		}
+
+		container = getElement(options.container);
+		if (container && container instanceof HTMLElement) {
+			window.addEventListener('mousemove', show, false);
+			window.addEventListener('touchstart', show, false);
+			show();
 		}
 
 		updateProgress();

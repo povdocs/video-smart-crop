@@ -254,7 +254,8 @@
 	player = new Play({
 		media: video,
 		playButton: 'playbutton',
-		timeline: 'timeline'
+		timeline: 'timeline',
+		container: 'video-player'
 	});
 
 	if (video.readyState) {
