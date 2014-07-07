@@ -15,6 +15,13 @@
 			width: 100%;
 		}
 
+		#container {
+			position: relative;
+			overflow: hidden;
+			height: 100%;
+			width: 100%;
+		}
+
 		#video {
 			position: absolute;
 			top: 0;
@@ -101,10 +108,12 @@
 		</style>
 	</head>
 	<body>
-		<video id="video" width="1280" height="690">
-			<source src="video/boxer.webm" type="video/webm"/>
-			<source src="video/boxer.mp4" type="video/mp4"/>
-		</video>
+		<div id="container">
+			<video id="video" width="1280" height="690">
+				<source src="video/boxer.webm" type="video/webm"/>
+				<source src="video/boxer.mp4" type="video/mp4"/>
+			</video>
+		</div>
 		<div id="video-player">
 			<div class="paused" id="playbutton"> </div>
 			<div id="timeline">
