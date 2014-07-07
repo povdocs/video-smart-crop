@@ -264,7 +264,7 @@
 		video.addEventListener('loadedmetadata', fetch);
 	}
 
-	popcorn = Popcorn('#video', {
+	popcorn = Popcorn('#video', { // jshint ignore:line
 		frameAnimation: true,
 		framerate: FRAME_RATE
 	});
