@@ -96,6 +96,15 @@
 		windowHeight = window.innerHeight;
 		windowWidth = window.innerWidth;
 
+		/*
+		Hack for mobile safari. Because video element is full size and only
+		appears smaller because of CSS transforms, body enlarges to fit the
+		full size video. We need to shrink it to correctly position the play
+		controls.
+		*/
+		document.body.style.width = windowWidth + 'px';
+		document.body.style.height = windowHeight + 'px';
+
 		Popcorn.instances.forEach(resize);
 	}
 
