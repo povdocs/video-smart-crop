@@ -140,7 +140,9 @@
 				container.classList.remove('hidden');
 			}
 			clearTimeout(hideTimeout);
-			hideTimeout = setTimeout(hide, 2000);
+			if (media && !media.paused) {
+				hideTimeout = setTimeout(hide, 2000);
+			}
 		}
 
 		function updatePlayState() {
