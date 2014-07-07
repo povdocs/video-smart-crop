@@ -184,12 +184,6 @@
 			start: function() {
 				addEvent(popcorn, base.options);
 			},
-			frame: function () {
-				/*
-				only update if this is the highest-priority active instance
-				that matches
-				*/
-			},
 			end: function() {
 				removeEvent(popcorn, base.options);
 			}
