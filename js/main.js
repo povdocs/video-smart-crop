@@ -6,6 +6,7 @@
 		position = document.getElementById('position'),
 		box = document.getElementById('box'),
 		boxdata = document.getElementById('boxdata'),
+		start = document.getElementById('start'),
 
 		// Customize this value for your specific video file
 		FRAME_RATE = 23.976216,
@@ -276,6 +277,15 @@
 		} else {
 			popcorn.disable('responsive');
 		}
+	});
+
+	start.addEventListener('click', function () {
+		video.play();
+	});
+
+	video.addEventListener('playing', function () {
+		start.style.display = 'none';
+		document.getElementById('video-player').style.display = '';
 	});
 
 	displayTime();

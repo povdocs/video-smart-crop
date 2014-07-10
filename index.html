@@ -111,6 +111,26 @@
 			display: none;
 		}
 
+		#start {
+			position: absolute;
+			border-radius: 50px;
+			background-color: rgba(128, 128, 128, 0.6);
+			color: rgba(255, 255, 255, 0.6);
+			left: 0;
+			right: 0;
+			top: 0;
+			font-size: 40px;
+			padding: 8px 20px;
+			bottom: 0;
+			top: 0;
+			margin: auto;
+			overflow: auto;
+			width: 270px;
+			height: 70px;
+			cursor: pointer;
+			outline: none;
+		}
+
 		</style>
 	</head>
 	<body>
@@ -120,7 +140,7 @@
 				<source src="video/boxer.mp4" type="video/mp4"/>
 			</video>
 		</div>
-		<div id="video-player">
+		<div id="video-player" style="display: none;">
 			<div class="paused" id="playbutton"> </div>
 			<div id="timeline">
 				<div id="progress"> </div>
@@ -134,6 +154,7 @@
 				<div id="boxdata"></div>
 			</div>
 		</div>
+		<button id="start">Start Demo</button>
 		<div id="box" style="display: none;"></div>
 		<script type="text/javascript" src="js/lib/popcorn.js"></script>
 		<script type="text/javascript" src="js/lib/popcorn-base.js"></script>
