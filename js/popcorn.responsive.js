@@ -24,61 +24,70 @@
 			clipDim,
 			videoWidth,
 			videoHeight,
-			transform = '';
+			transform = '',
+
+			i;
 
 		if (!instance) {
 			return;
 		}
 
 		list = instance.events;
+		video = popcorn.media;
+
+		videoWidth = video.videoWidth;
+		videoHeight = video.videoHeight;
+		videoAspect = videoWidth / videoHeight;
+		windowAspect = windowWidth / windowHeight;
 
 		//todo: loop, match min/max aspect. for (i = 0; )
-		options = list[0];
-		video = popcorn.media;
-		if (options) {
-			videoWidth = video.videoWidth;
-			videoHeight = video.videoHeight;
-			videoAspect = videoWidth / videoHeight;
-			windowAspect = windowWidth / windowHeight;
-
+		for (i = 0; i < list.length; i++) {
+			options = list[i];
 			if (windowAspect > videoAspect) {
 				//window is not tall enough
-				scale = windowWidth / videoWidth;
-				min = options.y;
+				if (!options.minAspect || windowAspect >= options.minAspect) {
+					scale = windowWidth / videoWidth;
+					min = options.y;
 
-				clipDim = videoWidth / windowAspect;
-				if (clipDim < options.height) {
-					//window is REALLY not tall enough, so we need to pillarbox
-					scale = windowHeight / options.height;
-					transform = 'scale(' + scale + ') translate(' +
-						(windowWidth - videoWidth * scale) / 2 + 'px, ' +
-						-min +
-						'px)';
-				} else {
-					transform = 'scale(' + scale + ') translateY(' +
-						-((videoHeight - clipDim) * min / (videoHeight - options.height)) +
-						'px)';
+					clipDim = videoWidth / windowAspect;
+					if (clipDim < options.height) {
+						//window is REALLY not tall enough, so we need to pillarbox
+						scale = windowHeight / options.height;
+						transform = 'scale(' + scale + ') translate(' +
+							(windowWidth - videoWidth * scale) / 2 + 'px, ' +
+							-min +
+							'px)';
+					} else {
+						transform = 'scale(' + scale + ') translateY(' +
+							-((videoHeight - clipDim) * min / (videoHeight - options.height)) +
+							'px)';
+					}
+					break;
 				}
 			} else {
 				//window is not wide enough
-				scale = windowHeight / videoHeight;
-				min = options.x;
+				if (!options.maxAspect || windowAspect <= options.maxAspect) {
+					scale = windowHeight / videoHeight;
+					min = options.x;
 
-				clipDim = videoHeight * windowAspect;
-				if (clipDim < options.width) {
-					//window is REALLY not wide enough, so we need to letterbox
-					scale = windowWidth / options.width;
-					transform = 'scale(' + scale + ') translate(' +
-						-min + 'px,' +
-						(windowHeight - videoHeight * scale) / 2 +
-						'px)';
-				} else {
-					transform = 'scale(' + scale + ') translateX(' +
-						-((videoWidth - clipDim) * min / (videoWidth - options.width)) +
-						'px)';
+					clipDim = videoHeight * windowAspect;
+					if (clipDim < options.width) {
+						//window is REALLY not wide enough, so we need to letterbox
+						scale = windowWidth / options.width;
+						transform = 'scale(' + scale + ') translate(' +
+							-min + 'px,' +
+							(windowHeight - videoHeight * scale) / 2 +
+							'px)';
+					} else {
+						transform = 'scale(' + scale + ') translateX(' +
+							-((videoWidth - clipDim) * min / (videoWidth - options.width)) +
+							'px)';
+					}
+					break;
 				}
 			}
 		}
+
 		video.style.webkitTransform = transform;
 		video.style.msTransform = transform;
 		video.style.mozTransform = transform;
@@ -119,12 +128,12 @@
 
 	function sortEvents(a, b) {
 		if (a.minAspect !== b.minAspect) {
-			return b.minAspect - a.minAspect;
+			return b.minAspect || 0 - a.minAspect || 0;
 		}
 
 		if (a.maxAspect !== b.maxAspect) {
-			return b.maxAspect - a.maxAspect;
-		}		
+			return (a.maxAspect || Infinity) - (b.maxAspect || Infinity);
+		}
 	}
 
 	function addEvent(popcorn, event) {

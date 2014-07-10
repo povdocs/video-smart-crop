@@ -33,7 +33,7 @@
 					start: Popcorn.util.toSeconds(scene.start, FRAME_RATE),
 					end: scene.end && Popcorn.util.toSeconds(scene.end, FRAME_RATE)
 				};
-				['x', 'y', 'width', 'height'].forEach(function (field) {
+				['x', 'y', 'width', 'height', 'minAspect', 'maxAspect'].forEach(function (field) {
 					var val = scene[field],
 						keyframes;
 
@@ -47,7 +47,7 @@
 							keyframes[time] = val;
 						});
 						options[field] = keyframes;
-					} else {
+					} else if (val !== undefined) {
 						options[field] = val;
 					}
 				});

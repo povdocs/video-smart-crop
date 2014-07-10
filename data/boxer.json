@@ -46,49 +46,63 @@
 	},
 
 	{
-		"title": "punching and painting",
+		"title": "punching and painting - wide",
 		"start": "27;08",
-		"end": "3:07;08",
+		"end": "3:12;12",
 		"x": {
-			"0": 950,
-			"32;11": 950,
-
-			"33;23": 870,
-			"40;19": 870,
-			"43;17": 770,
-			"47;09": 770,
-			"49;21": 950,
-			"53;00": 950,
-			"56;00": 770,
-
-			"57;02": 770,
-			"1:08;15": 660,
-
-			"1:11;02": 950,
-			"1:11;16": 950,
-
-			"1:12;15": 870,
-			"1:15;20": 870,
-			"1:17;01": 660,
+			"0": 230,
+			"3:00;16": 0,
 
 			"timing": "ease-in-out"
 		},
-		"width": {
-			"0": 330
+		"width": 1050,
+		"y": 240,
+		"height": 350,
+	},
+
+	{
+		"title": "punching and painting - medium",
+		"start": "27;08",
+		"end": "3:12;12",
+		"maxAspect": 1.2,
+		"x": {
+			"0": 480,
+			"3:00;16": 0,
+			"3:07;08": 100,
+
+			"timing": "ease-in-out"
 		},
-		"y": 208,
-		"height": 312
+		"width": 800,
+		"y": 240,
+		"height": 350,
+	},
+
+	{
+		"title": "punching and painting - small",
+		"start": "27;08",
+		"end": "3:00;16",
+		"x": {
+			"0": 950,
+			"3:00;16": 0,
+
+			"timing": "ease-in-out"
+		},
+		"width": 330,
+		"y": 240,
+		"height": 350,
+		"maxAspect": 0.85
 	},
 
 
 	{
 		"title": "title",
-		"start": "3:07;08",
+		"start": "3:00;16",
 		"end": "3:12;12",
 		"x": 120,
-		"width": 750,
+		"width": 820,
 		"y": 76,
-		"height": 583
+		"height": 583,
+		"maxAspect": 0.85
 	},
 	{
 		"title": "ceiling fan",
