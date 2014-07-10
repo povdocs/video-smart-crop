@@ -93,6 +93,29 @@
 		"maxAspect": 0.85
 	},
 
+	{
+		"title": "punching and painting - wide shot",
+		"start": "48;22",
+		"end": "55;22",
+		"maxAspect": 0.85,
+		"x": 300,
+		"width": 980,
+		"y": 240,
+		"height": 350
+	},
+
+
+	{
+		"title": "cut to cutie - small",
+		"start": "2:13;06",
+		"end": "2:19;00",
+		"x": 830,
+		"width": 330,
+		"y": 240,
+		"height": 350,
+		"maxAspect": 0.84
+	},
+
 
 	{
 		"title": "title",
@@ -108,7 +131,7 @@
 		"title": "ceiling fan",
 		"start": "3:12;12",
 		"end": "3:17",
-		"x": 633,
+		"x": 610,
 		"width": 625,
 		"y": 201,
 		"height": 245

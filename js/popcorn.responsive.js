@@ -134,6 +134,9 @@
 		if (a.maxAspect !== b.maxAspect) {
 			return (a.maxAspect || Infinity) - (b.maxAspect || Infinity);
 		}
+
+		//prioritize whichever one is shorter
+		return (a.end - a.start) - (b.end - b.start);
 	}
 
 	function addEvent(popcorn, event) {
