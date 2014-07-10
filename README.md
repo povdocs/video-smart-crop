@@ -12,6 +12,14 @@ This experiment is an attempt to test an alternate solution that allows a video 
 
 The intention is to serve the convenience of the viewer on whatever device they are using while granting the author a degree of control over the composition.
 
+## Roadmap
+- Refine complex rules for which ranges get triggered for increasingly extreme aspect ratios
+- Make a version for Seriously.js, once WebGL is available on iOS
+- Experiment with different types of shots
+- Build/improve basic tools for generating, visualizing and saving shot data
+- Support rules based on absolute pixel dimensions. i.e. a target rectangle may need to be zoomed in on low-res devices to be clear, such as text or a face.
+- Experiment using Popcorn.js to dynamically position title text so it remains in frame
+
 ## Known Issues
 This is an experimental prototype designed to test the responsive video concept, so it's not a fully fleshed out and tested piece of software.
 
