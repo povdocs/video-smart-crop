@@ -194,7 +194,7 @@
 			boxY = evt.clientY;
 			boxWidth = 0;
 			boxHeight = 0;
-			box.style.display = 'block';
+			box.style.display = '';
 			updateBox();
 			evt.preventDefault();
 		}
@@ -212,7 +212,7 @@
 	window.addEventListener('mouseup', function () {
 		dragging = false;
 		if (!boxWidth || !boxHeight) {
-			box.style.display = '';
+			box.style.display = 'none';
 		}
 	}, true);
 
@@ -220,7 +220,7 @@
 		dragging = false;
 		boxWidth = 0;
 		boxHeight = 0;
-		box.style.display = '';
+		box.style.display = 'none';
 	}, false);
 
 	window.addEventListener('keyup', function(evt) {
