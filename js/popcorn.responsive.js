@@ -128,7 +128,7 @@
 
 	function sortEvents(a, b) {
 		if (a.minAspect !== b.minAspect) {
-			return b.minAspect || 0 - a.minAspect || 0;
+			return (b.minAspect || 0) - (a.minAspect || 0);
 		}
 
 		if (a.maxAspect !== b.maxAspect) {
