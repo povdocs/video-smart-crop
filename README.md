@@ -84,5 +84,5 @@ so make sure to account for this issue when building your video player.
 - [Popcorn.js](https://github.com/mozilla/popcorn-js#license) and [Popcorn Base plugin](https://github.com/brianchirls/popcorn-base#license) are each distributed here under license from their respective authors
 
 ## Authors
-- Code, concept and design by [Brian Chirls](https://github.com/brianchirls)
-- Video clip from "Cutie and the Boxer" by Zachary Heinzerling
+- Code, concept and design by [Brian Chirls](https://github.com/brianchirls), [POV](http://www.pbs.org/pov/) Digital Technology Fellow
+- Video clip from "Cutie and the Boxer" by Zachary Heinzerling (Copyright Ex Lion Tamer, Inc.)
