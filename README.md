@@ -14,6 +14,8 @@ The intention is to serve the convenience of the viewer on whatever device they 
 
 ## Instructions
 
+[View live demo](http://povdocs.github.io/responsive-video/)
+
 To see the responsive video in action, use the start button or the play controls at the bottom to play the video. Resize the browser window or rotate your mobile device to trigger smart cropping for each shot.
 
 To customize the experiment with your own video, point the video element to your own video files and edit the data file to specify the parameters for each shot.

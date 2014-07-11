@@ -246,12 +246,6 @@
 
 	window.addEventListener('mousemove', displayCoords, false);
 
-	/*
-	if (/iP(ad|hone|od)/g.test(navigator.userAgent)) {
-		setInterval(resize, 500);
-	}
-	*/
-
 	player = new Play({
 		media: video,
 		playButton: 'playbutton',
@@ -274,8 +268,10 @@
 	enabled.addEventListener('change', function () {
 		if (enabled.checked) {
 			popcorn.enable('responsive');
+			video.className = '';
 		} else {
 			popcorn.disable('responsive');
+			video.className = 'center';
 		}
 	});
 
