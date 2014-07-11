@@ -55,7 +55,7 @@
 				popcorn.responsive(options);
 			});
 		};
-		xhr.open('GET', 'data/boxer.json');
+		xhr.open('GET', 'data/shots.json');
 		xhr.send();
 	}
 
