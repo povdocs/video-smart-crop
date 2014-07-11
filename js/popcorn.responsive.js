@@ -54,7 +54,7 @@
 						//window is REALLY not tall enough, so we need to pillarbox
 						scale = windowHeight / options.height;
 						transform = 'scale(' + scale + ') translate(' +
-							(windowWidth - videoWidth * scale) / 2 + 'px, ' +
+							(windowWidth - videoWidth * scale) / 2 / scale + 'px, ' +
 							-min +
 							'px)';
 					} else {
@@ -76,7 +76,7 @@
 						scale = windowWidth / options.width;
 						transform = 'scale(' + scale + ') translate(' +
 							-min + 'px,' +
-							(windowHeight - videoHeight * scale) / 2 +
+							(windowHeight - videoHeight * scale) / 2 / scale+
 							'px)';
 					} else {
 						transform = 'scale(' + scale + ') translateX(' +
