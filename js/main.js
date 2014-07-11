@@ -113,7 +113,6 @@
 	// Display current timecode for debugging/authoring
 	function displayTime() {
 		var h,
-			m,
 			s,
 			f,
 			t;
@@ -133,10 +132,8 @@
 			t = Math.floor(t);
 			s = t % 60;
 			t = (t - s) / 60;
-			m = t % 60;
-			h = (t - m) / 60;
 
-			timecode.innerHTML = h + ':' + twoDigits(m) + ':' + twoDigits(s) + ';' + twoDigits(f);
+			timecode.innerHTML = t + ':' + twoDigits(s) + ';' + twoDigits(f);
 		}
 
 		requestAnimationFrame(displayTime);
