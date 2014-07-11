@@ -80,7 +80,7 @@ so make sure to account for this issue when building your video player.
 
 ## License
 - Original code is made avalable under [MIT License](http://www.opensource.org/licenses/mit-license.php), Copyright (c) 2014 American Documentary Inc.
-- Video clip from "Cutie and the Boxer" - Copyright 2014 <TK>. All rights reserved.
+- Video clip from "Cutie and the Boxer" - Copyright 2014 Ex Lion Tamer, Inc. All rights reserved.
 - [Popcorn.js](https://github.com/mozilla/popcorn-js#license) and [Popcorn Base plugin](https://github.com/brianchirls/popcorn-base#license) are each distributed here under license from their respective authors
 
 ## Authors
