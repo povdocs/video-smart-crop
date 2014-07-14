@@ -77,6 +77,7 @@ This is an experimental prototype designed to test the responsive video concept,
 - Does not work on iPhone. Mobile Safari on iPhone will only play videos at full screen. There is probably not a workaround for this without building a native app,
 so make sure to account for this issue when building your video player.
 - Shot transitions may be off by one frame, especially when seeking. The HTML video element reports its current time before it updates the display, so the wrong shot data may be used for a very short but noticeable period.
+- Tested successfully on Firefox 30 (mobile and desktop), Chrome 35 (mobile and desktop), Safari 7, iPad Mobile Safari 7, Internet Explorer 10 and 11. Does not work on IE9.
 
 ## License
 - Original code is made avalable under [MIT License](http://www.opensource.org/licenses/mit-license.php), Copyright (c) 2014 American Documentary Inc.
