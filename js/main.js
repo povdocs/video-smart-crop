@@ -52,7 +52,7 @@
 						options[field] = val;
 					}
 				});
-				popcorn.responsive(options);
+				popcorn.smartcrop(options);
 			});
 		};
 		xhr.open('GET', 'data/shots.json');
@@ -261,13 +261,13 @@
 		framerate: FRAME_RATE
 	});
 
-	// responsive video effect can be turned on/off
+	// smart cropping effect can be turned on/off
 	enabled.addEventListener('change', function () {
 		if (enabled.checked) {
-			popcorn.enable('responsive');
+			popcorn.enable('smartcrop');
 			video.className = '';
 		} else {
-			popcorn.disable('responsive');
+			popcorn.disable('smartcrop');
 			video.className = 'center';
 		}
 	});
