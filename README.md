@@ -1,4 +1,4 @@
-# Responsive Video Experiment
+# Video Smart Cropping Experiment
 
 Traditionally, film and video are composed with a fixed [aspect ratio](http://en.wikipedia.org/wiki/Aspect_ratio_%28image%29), but the video may not always be viewed on a device with the same aspect ratio as originally intended. For example, theatrical films are often presented at 1.85:1, while television is broadcast at 16:9 for high-definition or 4:3 for standard definition. There are typically two solutions to this challenge:
 
@@ -14,9 +14,9 @@ The intention is to serve the convenience of the viewer on whatever device they 
 
 ## Instructions
 
-[View live demo](http://povdocs.github.io/responsive-video/)
+[View live demo](http://povdocs.github.io/video-smart-crop/)
 
-To see the responsive video in action, use the start button or the play controls at the bottom to play the video. Resize the browser window or rotate your mobile device to trigger smart cropping for each shot.
+To see smart cropping in action, use the start button or the play controls at the bottom to play the video. Resize the browser window or rotate your mobile device to trigger smart cropping for each shot.
 
 To customize the experiment with your own video, point the video element to your own video files and edit the data file to specify the parameters for each shot.
 
@@ -45,7 +45,7 @@ Each shot is described as an object that looks like this:
 
 `start` and `end` fields represent the starting and ending points in the video for that shot. You can use SMTP time code to get the exact frame, provided you specify the frame rate as above, or you can use a floating point number representing the time in seconds.
 
-`x`, `y`, `width` and `height` represent the rectangle around the target area in that shot. The responsive video code will make sure that no matter how the frame is stretched, everything inside the rectangle will remain visible. These values are in pixels, relative to the pixel dimensions of the unscaled video.
+`x`, `y`, `width` and `height` represent the rectangle around the target area in that shot. The smart cropping code will make sure that no matter how the frame is stretched, everything inside the rectangle will remain visible. These values are in pixels, relative to the pixel dimensions of the unscaled video.
 
 The rectangle values can be keyframe-animated by defining each value as an object. Refer to the [Popcorn Base documentation](https://github.com/brianchirls/popcorn-base#animate-param-options) for instructions on how these values are specified.
 
@@ -70,7 +70,7 @@ This experiment makes use of the following tools and technology:
 - Experiment using Popcorn.js to dynamically position title text so it remains in frame
 
 ## Known Issues
-This is an experimental prototype designed to test the responsive video concept, so it's not a fully fleshed out and tested piece of software.
+This is an experimental prototype designed to test the smart cropping concept, so it's not a fully fleshed out and tested piece of software.
 
 - Assumes only one video on a page, using the full window.
 - There is currently no way to fully tear down attached event listeners.

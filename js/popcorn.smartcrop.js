@@ -182,7 +182,7 @@
 	window.addEventListener('orientationchange', resizeAll, false);
 	resizeAll();
 
-	Popcorn.basePlugin('responsive', function (options, base) {
+	Popcorn.basePlugin('smartcrop', function (options, base) {
 		var popcorn = base.popcorn;
 
 		base.animate('x', function () {
